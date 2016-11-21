@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">GymTracker</string>
+
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+
+    <string name="home">Home</string>
+    <string name="statistics">Statistics</string>
+    <string name="add_exercise">Add exercise</string>
+    <string name="title_spinner">Choose your exercise or add it</string>
+    <string name="enter_exercise">Enter exercise</string>
+    <string name="enter_sets">Enter sets</string>
+    <string name="enter_repeats">Enter repeats</string>
+    <string name="kind_of_exercise">King of exercise:</string>
+    <string name="number_of_sets">Number of sets:</string>
+    <string name="number_of_repeats">Number of repeats:</string>
+    <string name="duplicate">Duplicate exercise!</string>
+
+</resources>

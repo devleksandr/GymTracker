@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="wrap_content" android:layout_height="wrap_content">
+
+    <TextView
+        android:text="@string/title_spinner"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleSpinner"
+        android:layout_marginTop="16dp" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/exercisesSpinner"
+        android:layout_below="@id/titleSpinner"
+        android:layout_marginTop="16dp" />
+
+    <android.support.design.widget.FloatingActionButton
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="true"
+        app:fabSize="mini"
+        app:srcCompat="@android:drawable/ic_input_add"
+        android:id="@+id/addExerciseFAB"
+        android:layout_alignParentRight="true"
+        android:layout_marginRight="32dp"
+        android:layout_marginTop="16dp" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_exercise"
+            android:id="@+id/exerciseET"
+            android:layout_width="160dp"
+            android:layout_below="@+id/exercisesSpinner"
+            android:imeOptions="actionNext"
+            android:inputType="text" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_sets"
+            android:id="@+id/setsET"
+            android:imeOptions="actionNext"
+            android:layout_width="160dp"
+            android:layout_below="@+id/exerciseET"
+            android:inputType="number" />
+
+        <EditText
+            android:layout_height="wrap_content"
+            android:hint="@string/enter_repeats"
+            android:id="@+id/repeatsET"
+            android:imeOptions="actionDone"
+            android:layout_width="160dp"
+            android:layout_below="@+id/setsET"
+            android:inputType="number" />
+
+
+</RelativeLayout>
