@@ -1,4 +1,4 @@
-package com.carrickane.gymtracker;
+package com.carrickane.gymtracker.database;
 
 import com.orm.SugarRecord;
 

@@ -54,7 +54,7 @@ public  class MainActivity extends AppCompatActivity {
                     startActivity(intent);
                 }
                 else if (id == R.id.nav_statistics) {
-                    Intent intent = new Intent(getBaseContext(),StatisticsActivity.class);
+                    Intent intent = new Intent(getBaseContext(),Statistics.class);
                     startActivity(intent);
                 }
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

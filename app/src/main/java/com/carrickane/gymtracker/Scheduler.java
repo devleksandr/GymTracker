@@ -15,6 +15,9 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.carrickane.gymtracker.database.ExerciseData;
+import com.carrickane.gymtracker.database.ExerciseKindData;
+
 import java.util.ArrayList;
 import java.util.List;
 

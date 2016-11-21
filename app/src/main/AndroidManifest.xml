@@ -31,7 +31,7 @@
             android:screenOrientation="portrait">
         </activity>
 
-        <activity android:name=".StatisticsActivity"
+        <activity android:name=".Statistics"
             android:screenOrientation="portrait">
         </activity>
     </application>

@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.carrickane.gymtracker.database.ExerciseData;
 import com.carrickane.view.CalendarListener;
 import com.carrickane.view.CustomCalendarView;
 import com.carrickane.view.DayDecorator;
