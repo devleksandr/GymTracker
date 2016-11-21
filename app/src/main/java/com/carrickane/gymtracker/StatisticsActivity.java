@@ -31,7 +31,7 @@ public class StatisticsActivity extends AppCompatActivity {
         });
         graphMonthly.addSeries(series);
 
-        BarGraphSeries<DataPoint> seriesblabla = new BarGraphSeries<>(new DataPoint[]{
+        BarGraphSeries<DataPoint> seriesYearly = new BarGraphSeries<>(new DataPoint[]{
                 new DataPoint(0, 7),
                 new DataPoint(1, 5),
                 new DataPoint(2, 3),
@@ -53,21 +53,21 @@ public class StatisticsActivity extends AppCompatActivity {
                 new DataPoint(18, 2),
                 new DataPoint(19, 6)
         });
-        graphYearly.addSeries(seriesblabla);
+        graphYearly.addSeries(seriesYearly);
 
         // styling
-        seriesblabla.setValueDependentColor(new ValueDependentColor<DataPoint>() {
+        seriesYearly.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
                 return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
             }
         });
 
-        seriesblabla.setSpacing(100);
+        seriesYearly.setSpacing(100);
 
 // draw values on top
-        seriesblabla.setDrawValuesOnTop(true);
-        seriesblabla.setValuesOnTopColor(Color.RED);
+        seriesYearly.setDrawValuesOnTop(true);
+        seriesYearly.setValuesOnTopColor(Color.RED);
 //series.setValuesOnTopSize(50);
     }
 }
