@@ -14,10 +14,10 @@
     tools:showIn="@layout/app_bar_main"
     android:layout_below="@id/main.toolbar">
 
-<android.support.v7.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recentExer"
-            android:layout_marginTop="16dp"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/recentExer"
+        android:layout_marginTop="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </FrameLayout>

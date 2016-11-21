@@ -1,18 +1,12 @@
 package com.carrickane.gymtracker;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.NavigationView;
-import android.support.v4.view.GravityCompat;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
 
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
+import com.jjoe64.graphview.helper.StaticLabelsFormatter;
 import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
@@ -23,72 +17,42 @@ import com.jjoe64.graphview.series.LineGraphSeries;
 
 public class Statistics extends AppCompatActivity {
 
-    GraphView graphMonthly;
+    GraphView graphWeekly;
     GraphView graphYearly;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.statistics);
-
-        //find and setup drawer
-        DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-                this, drawer, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
-        drawer.setDrawerListener(toggle);
-        toggle.syncState();
-
-        NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
-        navigationView.setNavigationItemSelectedListener(new NavigationView.
-                OnNavigationItemSelectedListener() {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // Handle navigation view item clicks here.
-                int id = item.getItemId();
-                if (id == R.id.nav_home) {
-                    Intent intent = new Intent(getBaseContext(),MainActivity.class);
-                    startActivity(intent);
-                }
-                else if (id == R.id.nav_statistics) {
-                    Intent intent = new Intent(getBaseContext(),Statistics.class);
-                    startActivity(intent);
-                }
-                DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
-                drawer.closeDrawer(GravityCompat.START);
-                return true;
-            }
-        });
-
-        graphMonthly = (GraphView) findViewById(R.id.graph_monthly);
+        setContentView(R.layout.graphs);
+        graphWeekly = (GraphView) findViewById(R.id.graph_weekly);
         graphYearly = (GraphView) findViewById(R.id.graph_yearly);
 
-        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(new DataPoint[]{
 
-        });
-        graphMonthly.addSeries(series);
+        graphYearly.getViewport().setScrollable(true);
 
-        BarGraphSeries<DataPoint> seriesYearly = new BarGraphSeries<>(new DataPoint[]{
-                new DataPoint(0, 7),
-                new DataPoint(1, 5),
-                new DataPoint(2, 3),
-                new DataPoint(3, 2),
-                new DataPoint(4, 6),
-                new DataPoint(5, 7),
-                new DataPoint(6, 5),
-                new DataPoint(7, 3),
-                new DataPoint(8, 2),
-                new DataPoint(9, 6),
-                new DataPoint(10, 7),
-                new DataPoint(11, 5),
-                new DataPoint(12, 3),
-                new DataPoint(13, 2),
-                new DataPoint(14, 6),
-                new DataPoint(15, 7),
-                new DataPoint(16, 5),
-                new DataPoint(17, 3),
-                new DataPoint(18, 2),
-                new DataPoint(19, 6)
-        });
+        graphWeekly.getViewport().setMinX(1);
+        graphWeekly.getViewport().setMaxX(7);
+
+        graphYearly.getViewport().setMinX(1);
+        graphYearly.getViewport().setMaxX(13);
+
+        // use static labels for horizontal labels for yearly stat
+        StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graphWeekly);
+        labelsFormatter.setHorizontalLabels(new String[] {"SUN", "MON", "TUE", "WED","THU",
+                "FRI","SAT"});
+        graphWeekly.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
+
+        // use static labels for horizontal labels for yearly stat
+        StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphYearly);
+        staticLabelsFormatter.setHorizontalLabels(new String[] {"JAN", "FEB", "MAR", "APR","MAY",
+                "JUN","JUL","AUG","SEP","OCT","NOV","DEC"});
+        graphYearly.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
+
+
+        LineGraphSeries<DataPoint> series = new LineGraphSeries<>(generateWeeklyData());
+        graphWeekly.addSeries(series);
+
+        BarGraphSeries<DataPoint> seriesYearly = new BarGraphSeries<>(generateYearlyData());
         graphYearly.addSeries(seriesYearly);
 
         // styling
@@ -99,11 +63,35 @@ public class Statistics extends AppCompatActivity {
             }
         });
 
-        seriesYearly.setSpacing(100);
+        seriesYearly.setSpacing(60);
 
-// draw values on top
+        // draw values on top
         seriesYearly.setDrawValuesOnTop(true);
         seriesYearly.setValuesOnTopColor(Color.RED);
-//series.setValuesOnTopSize(50);
+        seriesYearly.setValuesOnTopSize(20);
+    }
+
+    private DataPoint[] generateWeeklyData() {
+        int count = 7;
+        DataPoint[] values = new DataPoint[count];
+        for (int i=0; i<count; i++) {
+            double x = i;
+            double y = Math.sin(i+2);
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
+        }
+        return values;
+    }
+
+    private DataPoint[] generateYearlyData() {
+        int count = 12;
+        DataPoint[] values = new DataPoint[count];
+        for (int i=0; i<count; i++) {
+            double x = i;
+            double y = i+2;
+            DataPoint v = new DataPoint(x, y);
+            values[i] = v;
+        }
+        return values;
     }
 }
