@@ -1,7 +1,6 @@
 package com.carrickane.gymtracker;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -22,6 +21,11 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+
+import static com.carrickane.gymtracker.Constants.DATE_SHORT;
+import static com.carrickane.gymtracker.Constants.FORMAT_DATE_FULL;
+import static com.carrickane.gymtracker.Constants.FORMAT_DATE_SHORT;
+import static com.carrickane.gymtracker.Constants.SELECTED_DATE;
 
 /**
  * Created by carrickane on 16.11.2016.
@@ -46,7 +50,7 @@ public class CalendarFragment extends Fragment {
         //Initialize calendar with date
         final Calendar currentCalendar = Calendar.getInstance(Locale.getDefault());
         //Date format for queries
-        final SimpleDateFormat formatShort = new SimpleDateFormat("MM-yyyy");
+        final SimpleDateFormat formatShort = new SimpleDateFormat(FORMAT_DATE_SHORT);
         queryDateShort = formatShort.format(currentCalendar.getTime());
         //Show monday as first date of week
         calendarView.setFirstDayOfWeek(Calendar.MONDAY);
@@ -60,11 +64,11 @@ public class CalendarFragment extends Fragment {
 
             @Override
             public void onDateSelected(Date date) {
-                SimpleDateFormat df = new SimpleDateFormat("dd-MM-yyyy");
+                SimpleDateFormat df = new SimpleDateFormat(FORMAT_DATE_FULL);
                 String selectedDate = df.format(date);
-                Intent intent = new Intent(getContext(), Scheduler.class);
-                intent.putExtra("selectedDate", selectedDate);
-                intent.putExtra("dateShort",queryDateShort);
+                Intent intent = new Intent(getActivity(), Scheduler.class);
+                intent.putExtra(SELECTED_DATE, selectedDate);
+                intent.putExtra(DATE_SHORT,queryDateShort);
                 startActivity(intent);
             }
 
@@ -83,38 +87,40 @@ public class CalendarFragment extends Fragment {
         calendarView.refreshCalendar(currentCalendar);
         buildQueryForEvent(queryDateShort);
         //building query for checking existing events for a month
-        setRetainInstance(true);
         return v;
     }
 
     public static void buildQueryForEvent (String queryDateShort) {
         List<ExerciseData> exerciseData;
-        int maxDaysInMonth = 31;
-        for (int i = 1; i <= maxDaysInMonth; i++) {
-            String fullDateQuery = new StringBuilder().append(i).append("-").
-                    append(queryDateShort).toString();
-            exerciseData = ExerciseData.findWithQuery(ExerciseData.class,
+        String completeArgs = new StringBuilder().append("SELECT * FROM EXERCISE_DATA " +
+                "WHERE DATE_INSERT LIKE").append("'%").append(queryDateShort).
+                append("%'").toString();
+        exerciseData = ExerciseData.findWithQuery(ExerciseData.class,completeArgs);
+        if (exerciseData.size() !=0) {
+            int maxDaysInMonth =31;
+            for (int i = 1; i <= maxDaysInMonth; i++) {
+                String fullDateQuery = new StringBuilder().append(i).append("-").
+                        append(queryDateShort).toString();
+                exerciseData = ExerciseData.findWithQuery(ExerciseData.class,
                     "SELECT * FROM EXERCISE_DATA WHERE DATE_INSERT = ?", fullDateQuery);
 
-            //if list not empty
-            if (exerciseData.size() != 0) {
-                Date setDate = null;
-                SimpleDateFormat formatFull = new SimpleDateFormat("dd-MM-yyyy");
+                //if list not empty
+                if (exerciseData.size() != 0) {
+                    Date setDate = null;
+                    SimpleDateFormat formatFull = new SimpleDateFormat("dd-MM-yyyy");
 
-                //parse selected date
-                try {
-                    setDate = formatFull.parse(fullDateQuery);
-                } catch (ParseException e) {
-                    e.printStackTrace();
+                    //parse selected date
+                    try {
+                        setDate = formatFull.parse(fullDateQuery);
+                    } catch (ParseException e) {
+                        e.printStackTrace();
+                    }
+
+                    Calendar calendarEvent = Calendar.getInstance();
+                    calendarEvent.setTime(setDate);
+                    //calling method SetImageIfEventExist from CustomCalendarView.class
+                    calendarView.SetImageIfEventExist(calendarEvent);
                 }
-
-                Calendar calendarEvent = Calendar.getInstance();
-                calendarEvent.setTime(setDate);
-                //calling method SetImageIfEventExist from CustomCalendarView.class
-                calendarView.SetImageIfEventExist(calendarEvent);
-            }
-            //otherwise do nothing
-            else {
             }
         }
     }
@@ -124,7 +130,7 @@ public class CalendarFragment extends Fragment {
         public void decorate(DayView dayView) {
             //set grey background for past days in month
             if (CalendarUtils.isPastDay(dayView.getDate())) {
-                int color = Color.parseColor("#a9afb9");
+                int color = getResources().getColor(R.color.disabled_date);
                 dayView.setBackgroundColor(color);
             }
         }

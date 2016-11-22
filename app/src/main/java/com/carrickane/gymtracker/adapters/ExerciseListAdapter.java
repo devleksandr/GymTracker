@@ -1,4 +1,4 @@
-package com.carrickane.gymtracker;
+package com.carrickane.gymtracker.adapters;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.carrickane.gymtracker.R;
 import com.carrickane.gymtracker.database.ExerciseData;
 
 import java.util.List;
@@ -28,12 +29,9 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
         public final TextView exerciseTV;
 
-        //public final RelativeLayout holderRL;
-
         public ViewHolder(View itemView) {
             super(itemView);
             exerciseTV = (TextView) itemView.findViewById(R.id.exerciseTV);
-            //holderRL = (RelativeLayout) itemView.findViewById(R.id.holderRL);
         }
     }
 
@@ -46,8 +44,8 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        ExerciseData exerciseDatas = exerciseData.get(position);
-        holder.exerciseTV.setText(exerciseDatas.toString());
+        ExerciseData exercise = exerciseData.get(position);
+        holder.exerciseTV.setText(exercise.toString());
     }
 
     @Override

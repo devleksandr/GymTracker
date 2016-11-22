@@ -16,6 +16,7 @@
     <string name="number_of_sets">Number of sets:</string>
     <string name="number_of_repeats">Number of repeats:</string>
     <string name="duplicate">Duplicate exercise!</string>
+    <string name="cancel">Cancel</string>
 
     <array name="exercises">
 

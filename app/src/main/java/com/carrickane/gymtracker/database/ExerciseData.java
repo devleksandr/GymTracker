@@ -30,9 +30,9 @@ public class ExerciseData extends SugarRecord {
     //building string with saved elements
     @Override
     public String toString() {
-        return  "Kind of exercise:" + " " + exerciseType + '\n' +
-                "Number of sets:" + " " + exerciseSets + '\n' +
-                "Number of repeats:" + " " + exerciseRepeats;
+        return  "EXERCISE:" + " " + exerciseType + '\n' +
+                "SETS:" + " " + exerciseSets + '\n' +
+                "REPEATS:" + " " + exerciseRepeats;
     }
 
 

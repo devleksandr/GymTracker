@@ -2,8 +2,11 @@ package com.carrickane.gymtracker;
 
 import android.graphics.Color;
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
+import com.carrickane.gymtracker.database.ExerciseData;
 import com.jjoe64.graphview.GraphView;
 import com.jjoe64.graphview.ValueDependentColor;
 import com.jjoe64.graphview.helper.StaticLabelsFormatter;
@@ -11,41 +14,43 @@ import com.jjoe64.graphview.series.BarGraphSeries;
 import com.jjoe64.graphview.series.DataPoint;
 import com.jjoe64.graphview.series.LineGraphSeries;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+
+import static com.carrickane.gymtracker.Constants.MONTH_ARRAY;
+import static com.carrickane.gymtracker.Constants.WEEK_ARRAY;
+
 /**
  * Created by carrickane on 16.11.2016.
  */
 
-public class Statistics extends AppCompatActivity {
+public class Statistics extends android.app.Fragment {
 
     GraphView graphWeekly;
     GraphView graphYearly;
+    DataPoint[] values;
 
     @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.graphs);
-        graphWeekly = (GraphView) findViewById(R.id.graph_weekly);
-        graphYearly = (GraphView) findViewById(R.id.graph_yearly);
-
+    public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        super.onCreateView(inflater,parent,savedInstanceState);
+        View v = inflater.inflate(R.layout.graphs,parent,false);
+        graphWeekly = (GraphView) v.findViewById(R.id.graph_weekly);
+        graphYearly = (GraphView) v.findViewById(R.id.graph_yearly);
 
         graphYearly.getViewport().setScrollable(true);
 
-        graphWeekly.getViewport().setMinX(1);
+        //graphWeekly.getViewport().setMinX(1);
         graphWeekly.getViewport().setMaxX(7);
 
-        graphYearly.getViewport().setMinX(1);
+        //graphYearly.getViewport().setMinX(1);
         graphYearly.getViewport().setMaxX(13);
 
-        // use static labels for horizontal labels for yearly stat
         StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graphWeekly);
-        labelsFormatter.setHorizontalLabels(new String[] {"SUN", "MON", "TUE", "WED","THU",
-                "FRI","SAT"});
+        labelsFormatter.setHorizontalLabels(WEEK_ARRAY);
         graphWeekly.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
 
-        // use static labels for horizontal labels for yearly stat
         StaticLabelsFormatter staticLabelsFormatter = new StaticLabelsFormatter(graphYearly);
-        staticLabelsFormatter.setHorizontalLabels(new String[] {"JAN", "FEB", "MAR", "APR","MAY",
-                "JUN","JUL","AUG","SEP","OCT","NOV","DEC"});
+        staticLabelsFormatter.setHorizontalLabels(MONTH_ARRAY);
         graphYearly.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
 
@@ -55,42 +60,61 @@ public class Statistics extends AppCompatActivity {
         BarGraphSeries<DataPoint> seriesYearly = new BarGraphSeries<>(generateYearlyData());
         graphYearly.addSeries(seriesYearly);
 
-        // styling
+        // styling yearly graph
         seriesYearly.setValueDependentColor(new ValueDependentColor<DataPoint>() {
             @Override
             public int get(DataPoint data) {
-                return Color.rgb((int) data.getX()*255/4, (int) Math.abs(data.getY()*255/6), 100);
+                return Color.rgb((int) data.getX()*255/4,
+                        (int) Math.abs(data.getY()*255/6), 100);
             }
         });
 
-        seriesYearly.setSpacing(60);
+        //set spacing between bars
+        seriesYearly.setSpacing(30);
 
-        // draw values on top
+        // draw values on top of bars
         seriesYearly.setDrawValuesOnTop(true);
         seriesYearly.setValuesOnTopColor(Color.RED);
         seriesYearly.setValuesOnTopSize(20);
+
+        return v;
     }
 
+
     private DataPoint[] generateWeeklyData() {
-        int count = 7;
-        DataPoint[] values = new DataPoint[count];
-        for (int i=0; i<count; i++) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
+        int weekIndex = 7;
+        values = new DataPoint[weekIndex];
+        for (int i = 0; i < weekIndex; i++) {
+            SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
+            String queryWeek = sdf.format(cal.getTime());
             double x = i;
-            double y = Math.sin(i+2);
+            double y = (double) ExerciseData.findWithQuery(ExerciseData.class,
+                    "SELECT * FROM EXERCISE_DATA WHERE DATE_INSERT =?",queryWeek).size();
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
+            cal.add(Calendar.DAY_OF_WEEK, 1);
         }
         return values;
     }
 
     private DataPoint[] generateYearlyData() {
-        int count = 12;
-        DataPoint[] values = new DataPoint[count];
-        for (int i=0; i<count; i++) {
+        Calendar cal = Calendar.getInstance();
+        cal.set(Calendar.MONTH,Calendar.JANUARY);
+        int monthIndex = 12;
+        DataPoint[] values = new DataPoint[monthIndex];
+        for (int i=0; i < monthIndex; i++) {
+            SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
+            String queryMonth = sdf.format(cal.getTime());
+            String completeArgs = new StringBuilder().append("SELECT * FROM EXERCISE_DATA " +
+                    "WHERE DATE_INSERT LIKE").append("'%").append(queryMonth).
+                    append("%'").toString();
             double x = i;
-            double y = i+2;
+            double y = (double) ExerciseData.findWithQuery(ExerciseData.class, completeArgs).size();
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
+            cal.add(Calendar.MONTH, 1);
         }
         return values;
     }

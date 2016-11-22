@@ -15,11 +15,18 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.carrickane.gymtracker.adapters.ExerciseListAdapter;
 import com.carrickane.gymtracker.database.ExerciseData;
 import com.carrickane.gymtracker.database.ExerciseKindData;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.carrickane.gymtracker.Constants.DATE_SHORT;
+import static com.carrickane.gymtracker.Constants.QUERY_FULL_LIST;
+import static com.carrickane.gymtracker.Constants.QUERY_KIND_OF_EXERCISE;
+import static com.carrickane.gymtracker.Constants.SELECTED_DATE;
+import static com.carrickane.gymtracker.Constants.SINGLE_KIND_OF_EXERCISE;
 
 /**
  * Created by carrickane on 16.11.2016.
@@ -47,19 +54,17 @@ public class Scheduler extends Activity {
         setContentView(R.layout.scheduler);
 
         Intent intent = getIntent();
-        dateInsert = intent.getStringExtra("selectedDate");
-        dateShort = intent.getStringExtra("dateShort");
+        dateInsert = intent.getStringExtra(SELECTED_DATE);
+        dateShort = intent.getStringExtra(DATE_SHORT);
 
         exercisesList = (RecyclerView) findViewById(R.id.exercisesList);
         //setting recycler view
         exercisesList.setLayoutManager(new LinearLayoutManager(this));
-        exercisesData = ExerciseData.findWithQuery(ExerciseData.class,
-                "SELECT * FROM EXERCISE_DATA WHERE DATE_INSERT=?",dateInsert);
+        exercisesData = ExerciseData.findWithQuery(ExerciseData.class,QUERY_FULL_LIST,dateInsert);
         adapter = new ExerciseListAdapter(exercisesData);
         exercisesList.setAdapter(adapter);
         exercisesList.addItemDecoration(new ItemDivider(this));
-        List kinds = ExerciseKindData.findWithQuery(ExerciseKindData.class,
-                "SELECT * FROM EXERCISE_KIND_DATA");
+        List kinds = ExerciseKindData.findWithQuery(ExerciseKindData.class,QUERY_KIND_OF_EXERCISE);
         exercises = new ArrayList<>(kinds);
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,
                 ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
@@ -135,7 +140,7 @@ public class Scheduler extends Activity {
             }
         });
 
-        dialog.setPositiveButton("Save", new DialogInterface.OnClickListener() {
+        dialog.setPositiveButton(R.string.save, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
 
@@ -147,8 +152,7 @@ public class Scheduler extends Activity {
                 }
 
                 List<ExerciseKindData> kind = ExerciseKindData.findWithQuery
-                        (ExerciseKindData.class,"SELECT * FROM EXERCISE_KIND_DATA " +
-                                "WHERE EXERCISE_KIND =?",exerciseType);
+                        (ExerciseKindData.class,SINGLE_KIND_OF_EXERCISE,exerciseType);
                 if (kind.size() == 0) {
                     ExerciseKindData kindData = new ExerciseKindData(exerciseType);
                     kindData.save();
@@ -168,18 +172,10 @@ public class Scheduler extends Activity {
                 startActivity(intent);
             }
         });
-        dialog.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+        dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {  }
         });
         dialog.show();
     }
-
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        Intent intent = new Intent(Scheduler.this,MainActivity.class);
-        startActivity(intent);
-    }
-
 }

@@ -307,7 +307,7 @@ public class CustomCalendarView extends LinearLayout {
         }
     }
 
-    private int getWeekIndex(int weekIndex, Calendar currentCalendar) {
+    public static int getWeekIndex(int weekIndex, Calendar currentCalendar) {
         int firstDayWeekPosition = currentCalendar.getFirstDayOfWeek();
         if (firstDayWeekPosition == 1) {
             return weekIndex;
