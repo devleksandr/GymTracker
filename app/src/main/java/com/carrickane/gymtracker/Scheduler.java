@@ -148,14 +148,15 @@ public class Scheduler extends Activity {
                     exerciseType = exerciseET.getText().toString();
                 }
 
+                //if type of exercise isn't present in database,add them. Otherwise do nothing
                 List<ExerciseKindData> kind = ExerciseKindData.findWithQuery
                         (ExerciseKindData.class,SINGLE_KIND_OF_EXERCISE,exerciseType);
+
                 if (kind.size() == 0) {
                     ExerciseKindData kindData = new ExerciseKindData(exerciseType);
                     kindData.save();
                 }
-                else {
-                }
+
                 setsET.setImeOptions(EditorInfo.IME_ACTION_NEXT);
                 exerciseSets = setsET.getText().toString();
                 repeatsET.setImeOptions(EditorInfo.IME_ACTION_DONE);

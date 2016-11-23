@@ -35,5 +35,4 @@ public class ExerciseData extends SugarRecord {
                 "REPEATS:" + " " + exerciseRepeats;
     }
 
-
 }

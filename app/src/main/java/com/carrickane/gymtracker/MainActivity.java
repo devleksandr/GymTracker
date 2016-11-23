@@ -22,10 +22,10 @@ public  class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //android.os.Debug.waitForDebugger();
         toolbar = (Toolbar) findViewById(R.id.main_toolbar);
         setSupportActionBar(toolbar);
 
+        //when application starts, add main fragment in container
         final MainActivityFragment mainActivityFragment = new MainActivityFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.add (R.id.frameMain,mainActivityFragment).commit();
@@ -42,7 +42,7 @@ public  class MainActivity extends AppCompatActivity {
                 OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-                // Handle navigation view item clicks here.
+                // handle navigation view item clicks here.
                 int id = item.getItemId();
 
                 if (id == R.id.nav_home) {

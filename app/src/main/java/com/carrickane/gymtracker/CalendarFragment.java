@@ -35,6 +35,7 @@ public class CalendarFragment extends Fragment {
 
     static CustomCalendarView calendarView;
     String queryDateShort = null;
+    static List<ExerciseData> exerciseData;
 
     public CalendarFragment() {
     }
@@ -58,8 +59,8 @@ public class CalendarFragment extends Fragment {
         calendarView.setShowOverflowDate(false);
         //call refreshCalendar to update calendar the view
         calendarView.refreshCalendar(currentCalendar);
-        //set listener for passing through EventList.class with selected date
 
+        //set listener for passing through Scheduler.class with selected date
         calendarView.setCalendarListener(new CalendarListener() {
 
             @Override
@@ -91,11 +92,14 @@ public class CalendarFragment extends Fragment {
     }
 
     public static void buildQueryForEvent (String queryDateShort) {
-        List<ExerciseData> exerciseData;
+
+        //building query for monthly exercises
         String completeArgs = new StringBuilder().append("SELECT * FROM EXERCISE_DATA " +
                 "WHERE DATE_INSERT LIKE").append("'%").append(queryDateShort).
                 append("%'").toString();
         exerciseData = ExerciseData.findWithQuery(ExerciseData.class,completeArgs);
+
+        //if month contains at least one exercise - check all days
         if (exerciseData.size() !=0) {
             int maxDaysInMonth =31;
             for (int i = 1; i <= maxDaysInMonth; i++) {

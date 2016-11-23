@@ -25,11 +25,11 @@ public class ExerciseListAdapter extends RecyclerView.Adapter<ExerciseListAdapte
     }
 
     //initializing view holder
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public final TextView exerciseTV;
+        final TextView exerciseTV;
 
-        public ViewHolder(View itemView) {
+        ViewHolder(View itemView) {
             super(itemView);
             exerciseTV = (TextView) itemView.findViewById(R.id.exerciseTV);
         }

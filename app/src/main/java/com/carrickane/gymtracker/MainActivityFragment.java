@@ -28,6 +28,7 @@ public class MainActivityFragment extends Fragment {
                               final ViewGroup container, Bundle savedInstanceState) {
         super.onCreateView(inflater, container, savedInstanceState);
         View v = inflater.inflate(R.layout.app_bar_main, container, false);
+        //find and setup view pager
         viewPager = (ViewPager) v.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
 

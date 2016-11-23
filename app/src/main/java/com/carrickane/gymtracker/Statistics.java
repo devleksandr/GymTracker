@@ -1,10 +1,8 @@
 package com.carrickane.gymtracker;
 
-import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,7 +30,6 @@ public class Statistics extends Fragment {
     GraphView graphWeekly;
     GraphView graphYearly;
     DataPoint[] values;
-    Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -40,23 +37,12 @@ public class Statistics extends Fragment {
         View v = inflater.inflate(R.layout.graphs,parent,false);
         graphWeekly = (GraphView) v.findViewById(R.id.graph_weekly);
         graphYearly = (GraphView) v.findViewById(R.id.graph_yearly);
-        toolbar = (Toolbar) v.findViewById(R.id.toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
-        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(getContext(),MainActivity.class);
-                startActivity(intent);
-            }
-        });
-        graphYearly.getViewport().setScrollable(true);
 
-        //graphWeekly.getViewport().setMinX(1);
+        //setting max X coordinates for each graph
         graphWeekly.getViewport().setMaxX(7);
+        graphYearly.getViewport().setMaxX(12);
 
-        //graphYearly.getViewport().setMinX(1);
-        graphYearly.getViewport().setMaxX(13);
-
+        //filling descriptions for X coordinates on week and year from constant arrays
         StaticLabelsFormatter labelsFormatter = new StaticLabelsFormatter(graphWeekly);
         labelsFormatter.setHorizontalLabels(WEEK_ARRAY);
         graphWeekly.getGridLabelRenderer().setLabelFormatter(labelsFormatter);
@@ -65,10 +51,11 @@ public class Statistics extends Fragment {
         staticLabelsFormatter.setHorizontalLabels(MONTH_ARRAY);
         graphYearly.getGridLabelRenderer().setLabelFormatter(staticLabelsFormatter);
 
-
+        //initializing and drawing linear graph for current week by calling method generateWeeklyData()
         LineGraphSeries<DataPoint> series = new LineGraphSeries<>(generateWeeklyData());
         graphWeekly.addSeries(series);
 
+        //initializing and drawing bar graph for current year by calling method generateYearlyData()
         BarGraphSeries<DataPoint> seriesYearly = new BarGraphSeries<>(generateYearlyData());
         graphYearly.addSeries(seriesYearly);
 
@@ -94,28 +81,34 @@ public class Statistics extends Fragment {
 
 
     private DataPoint[] generateWeeklyData() {
+        //getting current day of week
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.DAY_OF_WEEK, cal.getFirstDayOfWeek());
         int weekIndex = 7;
         values = new DataPoint[weekIndex];
+        //get count of exercises for each day of week (from first day to last)
         for (int i = 0; i < weekIndex; i++) {
             SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
             String queryWeek = sdf.format(cal.getTime());
             double x = i;
             double y = (double) ExerciseData.findWithQuery(ExerciseData.class,
                     "SELECT * FROM EXERCISE_DATA WHERE DATE_INSERT =?",queryWeek).size();
+            //setting coordinates
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
+            //moving for next day of week
             cal.add(Calendar.DAY_OF_WEEK, 1);
         }
         return values;
     }
 
     private DataPoint[] generateYearlyData() {
+        //getting current month
         Calendar cal = Calendar.getInstance();
         cal.set(Calendar.MONTH,Calendar.JANUARY);
         int monthIndex = 12;
         DataPoint[] values = new DataPoint[monthIndex];
+        //get count of exercises for each month of year (from first to last)
         for (int i=0; i < monthIndex; i++) {
             SimpleDateFormat sdf = new SimpleDateFormat("MM-yyyy");
             String queryMonth = sdf.format(cal.getTime());
@@ -124,8 +117,10 @@ public class Statistics extends Fragment {
                     append("%'").toString();
             double x = i;
             double y = (double) ExerciseData.findWithQuery(ExerciseData.class, completeArgs).size();
+            //setting coordinates
             DataPoint v = new DataPoint(x, y);
             values[i] = v;
+            //moving for next month
             cal.add(Calendar.MONTH, 1);
         }
         return values;
