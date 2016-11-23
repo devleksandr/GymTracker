@@ -1,7 +1,10 @@
 package com.carrickane.gymtracker;
 
+import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,11 +27,12 @@ import static com.carrickane.gymtracker.Constants.WEEK_ARRAY;
  * Created by carrickane on 16.11.2016.
  */
 
-public class Statistics extends android.app.Fragment {
+public class Statistics extends Fragment {
 
     GraphView graphWeekly;
     GraphView graphYearly;
     DataPoint[] values;
+    Toolbar toolbar;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -36,7 +40,15 @@ public class Statistics extends android.app.Fragment {
         View v = inflater.inflate(R.layout.graphs,parent,false);
         graphWeekly = (GraphView) v.findViewById(R.id.graph_weekly);
         graphYearly = (GraphView) v.findViewById(R.id.graph_yearly);
-
+        toolbar = (Toolbar) v.findViewById(R.id.toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getContext(),MainActivity.class);
+                startActivity(intent);
+            }
+        });
         graphYearly.getViewport().setScrollable(true);
 
         //graphWeekly.getViewport().setMinX(1);

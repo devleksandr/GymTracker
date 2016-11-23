@@ -1,27 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+
+<android.support.design.widget.CoordinatorLayout android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
     android:background="@android:color/background_light"
     android:fitsSystemWindows="true"
     tools:context="com.carrickane.gymtracker.MainActivity"
-    android:id="@+id/coordin">
+    android:id="@+id/coordin"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay"
         android:id="@+id/appBar"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        android:layout_marginTop="56dp">
 
         <android.support.design.widget.CollapsingToolbarLayout
             android:id="@+id/main.collapsing"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             android:fitsSystemWindows="true"
             app:contentScrim="?attr/colorPrimary"
@@ -32,51 +34,36 @@
             <ImageView
                 android:id="@+id/main.backdrop"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:scaleType="centerCrop"
                 android:fitsSystemWindows="true"
                 android:src="@drawable/gym_toolbar"
                 app:layout_collapseMode="parallax" />
 
-            <android.support.v7.widget.Toolbar
-                android:id="@+id/main.toolbar"
-                android:layout_width="match_parent"
-                android:layout_height="?attr/actionBarSize"
-                app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-                app:layout_collapseMode="pin"
-                />
         </android.support.design.widget.CollapsingToolbarLayout>
+
     </android.support.design.widget.AppBarLayout>
 
-    <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
+    <android.support.v4.view.ViewPager
+
+        android:id="@+id/viewpager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.carrickane.gymtracker.MainActivity"
-        android:id="@+id/frameMain"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/viewpager"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
+    </android.support.v4.view.ViewPager>
 
-        </android.support.v4.view.ViewPager>
-
-        <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            xmlns:tools="http://schemas.android.com/tools"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            tools:context="com.carrickane.gymtracker.MainActivity"
-            android:id="@+id/frame">
-        <include
-            layout="@layout/content_main"
-            android:layout_height="match_parent"
-            android:layout_width="match_parent">
-        </include>
-
-        </FrameLayout>
-
-
-    </FrameLayout>
+    <include layout="@layout/content_main"
+        android:id="@+id/inclusionFragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/coordin"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
 </android.support.design.widget.CoordinatorLayout>
+
+
+
+
+
+
+

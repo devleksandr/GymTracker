@@ -45,9 +45,6 @@ public class Scheduler extends Activity {
     RecyclerView.Adapter adapter;
     ArrayList<String> exercises;
 
-
-
-
     @Override
     public void onCreate (Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -178,4 +175,11 @@ public class Scheduler extends Activity {
         });
         dialog.show();
     }
+
+    @Override
+        public void onBackPressed() {
+                super.onBackPressed();
+                Intent intent = new Intent(Scheduler.this,MainActivity.class);
+                startActivity(intent);
+        }
 }
