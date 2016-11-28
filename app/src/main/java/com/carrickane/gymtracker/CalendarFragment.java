@@ -1,8 +1,9 @@
 package com.carrickane.gymtracker;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -67,10 +68,14 @@ public class CalendarFragment extends Fragment {
             public void onDateSelected(Date date) {
                 SimpleDateFormat df = new SimpleDateFormat(FORMAT_DATE_FULL);
                 String selectedDate = df.format(date);
-                Intent intent = new Intent(getActivity(), Scheduler.class);
-                intent.putExtra(SELECTED_DATE, selectedDate);
-                intent.putExtra(DATE_SHORT,queryDateShort);
-                startActivity(intent);
+                Scheduler scheduler = new Scheduler();
+                Bundle bundle = new Bundle();
+                bundle.putString(SELECTED_DATE, selectedDate);
+                bundle.putString(DATE_SHORT,queryDateShort);
+                scheduler.setArguments(bundle);
+                FragmentManager fm = getActivity().getSupportFragmentManager();
+                FragmentTransaction ft = fm.beginTransaction();
+                ft.replace(R.id.frameMain,scheduler).addToBackStack(null).commit();
             }
 
             //getting month changed and building query for events

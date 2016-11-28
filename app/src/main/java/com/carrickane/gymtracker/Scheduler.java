@@ -1,15 +1,17 @@
 package com.carrickane.gymtracker;
 
-import android.app.Activity;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -32,7 +34,7 @@ import static com.carrickane.gymtracker.Constants.SINGLE_KIND_OF_EXERCISE;
  * Created by carrickane on 16.11.2016.
  */
 
-public class Scheduler extends Activity {
+public class Scheduler extends Fragment {
 
     RecyclerView exercisesList;
     FloatingActionButton addFAB;
@@ -46,21 +48,20 @@ public class Scheduler extends Activity {
     ArrayList<String> exercises;
 
     @Override
-    public void onCreate (Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.scheduler);
+    public View onCreateView (LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
+        super.onCreateView(inflater, parent, savedInstanceState);
+        View v = inflater.inflate(R.layout.scheduler,parent,false);
 
-        Intent intent = getIntent();
-        dateInsert = intent.getStringExtra(SELECTED_DATE);
-        dateShort = intent.getStringExtra(DATE_SHORT);
+        dateInsert = getArguments().getString(SELECTED_DATE);
+        dateShort = getArguments().getString(DATE_SHORT);
 
-        exercisesList = (RecyclerView) findViewById(R.id.exercisesList);
+        exercisesList = (RecyclerView) v.findViewById(R.id.exercisesList);
         //setting recycler view
-        exercisesList.setLayoutManager(new LinearLayoutManager(this));
+        exercisesList.setLayoutManager(new LinearLayoutManager(getContext()));
         exercisesData = ExerciseData.findWithQuery(ExerciseData.class,QUERY_FULL_LIST,dateInsert);
         adapter = new ExerciseListAdapter(exercisesData);
         exercisesList.setAdapter(adapter);
-        exercisesList.addItemDecoration(new ItemDivider(this));
+        exercisesList.addItemDecoration(new ItemDivider(getContext()));
         List kinds = ExerciseKindData.findWithQuery(ExerciseKindData.class,QUERY_KIND_OF_EXERCISE);
         exercises = new ArrayList<>(kinds);
         ItemTouchHelper.SimpleCallback simpleCallback = new ItemTouchHelper.SimpleCallback(0,
@@ -93,13 +94,14 @@ public class Scheduler extends Activity {
         final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleCallback);
         itemTouchHelper.attachToRecyclerView(exercisesList);
 
-        addFAB = (FloatingActionButton) findViewById(R.id.addFAB);
+        addFAB = (FloatingActionButton) v.findViewById(R.id.addFAB);
         addFAB.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 addExerciseViaDialog();
             }
         });
+        return v;
     }
 
     private void addExerciseViaDialog() {
@@ -110,9 +112,10 @@ public class Scheduler extends Activity {
         final EditText setsET;
         final EditText repeatsET;
 
-        final AlertDialog.Builder dialog = new AlertDialog.Builder(Scheduler.this);
+        final AlertDialog.Builder dialog = new AlertDialog.Builder(getActivity());
         dialog.setTitle(R.string.add_exercise);
-        View v = getLayoutInflater().inflate(R.layout.add_exercise_dialog, null);
+        LayoutInflater inflater = LayoutInflater.from(getActivity());
+        View v = inflater.inflate(R.layout.add_exercise_dialog, null);
         dialog.setView(v);
         exerciseSpinner = (Spinner)v.findViewById(R.id.exercisesSpinner);
         addExercise = (FloatingActionButton) v.findViewById(R.id.addExerciseFAB);
@@ -122,7 +125,7 @@ public class Scheduler extends Activity {
         exerciseET.setVisibility(View.INVISIBLE);
 
         //setting spinner adapter for choosing required element
-        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this,
+        final ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(getContext(),
                 android.R.layout.simple_spinner_item, exercises);
         spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         exerciseSpinner.setAdapter(spinnerAdapter);
@@ -166,7 +169,7 @@ public class Scheduler extends Activity {
                 ExerciseData exerciseData = new ExerciseData(dateInsert,exerciseType,
                         exerciseSets,exerciseRepeats);
                 exerciseData.save();
-                Intent intent = new Intent(Scheduler.this,MainActivity.class);
+                Intent intent = new Intent(getContext(),MainActivity.class);
                 startActivity(intent);
             }
         });
@@ -178,9 +181,9 @@ public class Scheduler extends Activity {
     }
 
     @Override
-        public void onBackPressed() {
-                super.onBackPressed();
-                Intent intent = new Intent(Scheduler.this,MainActivity.class);
+        public void onDetach() {
+                super.onDetach();
+                Intent intent = new Intent(getContext(),MainActivity.class);
                 startActivity(intent);
         }
 }
