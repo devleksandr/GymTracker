@@ -3,6 +3,7 @@ package com.carrickane.gymtracker;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -125,4 +126,13 @@ public class Statistics extends Fragment {
         }
         return values;
     }
+
+    @Override
+    public void onDetach() {
+        super.onDetach();
+        MainActivityFragment mainActivityFragment = new MainActivityFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frameMain,mainActivityFragment).commit();
+    }
+
 }

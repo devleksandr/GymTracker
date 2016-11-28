@@ -75,7 +75,7 @@ public class CalendarFragment extends Fragment {
                 scheduler.setArguments(bundle);
                 FragmentManager fm = getActivity().getSupportFragmentManager();
                 FragmentTransaction ft = fm.beginTransaction();
-                ft.replace(R.id.frameMain,scheduler).addToBackStack(null).commit();
+                ft.replace(R.id.frameMain,scheduler).addToBackStack("Schedule").commit();
             }
 
             //getting month changed and building query for events

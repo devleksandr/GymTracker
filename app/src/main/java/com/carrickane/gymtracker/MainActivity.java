@@ -15,8 +15,6 @@ public  class MainActivity extends AppCompatActivity {
 
     Toolbar toolbar;
 
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -28,7 +26,7 @@ public  class MainActivity extends AppCompatActivity {
         //when application starts, add main fragment in container
         final MainActivityFragment mainActivityFragment = new MainActivityFragment();
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.add (R.id.frameMain,mainActivityFragment).commit();
+        ft.add (R.id.frameMain,mainActivityFragment).addToBackStack("Main").commit();
 
         //find and setup drawer
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -54,7 +52,7 @@ public  class MainActivity extends AppCompatActivity {
                 else if (id == R.id.nav_statistics) {
                     Statistics statistics = new Statistics();
                     FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-                    ft.replace(R.id.frameMain,statistics).commit();
+                    ft.replace(R.id.frameMain,statistics).addToBackStack("Stat").commit();
                 }
 
                 DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -64,6 +62,7 @@ public  class MainActivity extends AppCompatActivity {
         });
 
     }
+
 
     @Override
     public void onBackPressed() {

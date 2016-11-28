@@ -1,10 +1,10 @@
 package com.carrickane.gymtracker;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -169,8 +169,8 @@ public class Scheduler extends Fragment {
                 ExerciseData exerciseData = new ExerciseData(dateInsert,exerciseType,
                         exerciseSets,exerciseRepeats);
                 exerciseData.save();
-                Intent intent = new Intent(getContext(),MainActivity.class);
-                startActivity(intent);
+                //moving to main fragment after saving exercise
+                onDetach();
             }
         });
         dialog.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
@@ -182,8 +182,9 @@ public class Scheduler extends Fragment {
 
     @Override
         public void onDetach() {
-                super.onDetach();
-                Intent intent = new Intent(getContext(),MainActivity.class);
-                startActivity(intent);
-        }
+        super.onDetach();
+        MainActivityFragment mainActivityFragment = new MainActivityFragment();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.frameMain,mainActivityFragment).commit();
+    }
 }
